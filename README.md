@@ -9,7 +9,8 @@ REST API for managing doctors in the Doctor Directory application.
 ## Base URL
 
 ```text
-https://6a32c710c6ca2aee4385956d.mockapi.io ```
+https://6a32c710c6ca2aee4385956d.mockapi.io
+```
 
 Replace the base URL with your actual API endpoint.
 
