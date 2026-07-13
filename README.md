@@ -11,9 +11,6 @@ REST API for managing doctors in the Doctor Directory application.
 ```text
 https://6a5492808547b9f7111c7104.mockapi.io
 ```
-
-Replace the base URL with your actual API endpoint.
-
 ---
 
 ## Endpoints
@@ -172,10 +169,3 @@ DELETE {baseUR}/api/hackathon/doctor/1
 | 500 | Internal server error |
 
 ---
-
-## Postman Variables
-
-| Variable | Description |
-|----------|-------------|
-| `baseUrl` | Base API URL |
-| `doctorId` | Doctor ID used for testing endpoints |
