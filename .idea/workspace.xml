@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8fde05e9-f46b-43fb-bcf4-9d40ca33fa41" name="Changes" comment="created model class for api calling" />
+    <list default="true" id="8fde05e9-f46b-43fb-bcf4-9d40ca33fa41" name="Changes" comment="created model class for api calling">
+      <change beforePath="$PROJECT_DIR$/lib/models/DoctorsAll.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/DoctorsAll.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -76,6 +78,11 @@
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\sreen\StudioProjects\doctor-directory-app\lib\models" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
@@ -138,7 +145,15 @@
       <option name="project" value="LOCAL" />
       <updated>1784014701181</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="created model class for api calling">
+      <option name="closed" value="true" />
+      <created>1784014784070</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1784014784070</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
