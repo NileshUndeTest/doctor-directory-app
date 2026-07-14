@@ -8,7 +8,7 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
-  // Simple function to show the "Remove Doctor" alert dialog box
+
   void _showRemoveDialog() {
     showDialog(
       context: context,
@@ -21,7 +21,6 @@ class _DetailsState extends State<Details> {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: 10),
-              // Red Trash Icon in a circle
               Container(
                 padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -44,7 +43,7 @@ class _DetailsState extends State<Details> {
               SizedBox(height: 24),
               Row(
                 children: [
-                  // Cancel Button
+                  
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
@@ -53,13 +52,13 @@ class _DetailsState extends State<Details> {
                         padding: EdgeInsets.symmetric(vertical: 12),
                       ),
                       onPressed: () {
-                        Navigator.pop(context); // Closes the dialog box
+                        Navigator.pop(context); 
                       },
                       child: Text('Cancel', style: TextStyle(color: Colors.black)),
                     ),
                   ),
                   SizedBox(width: 12),
-                  // Remove Button
+                  
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -68,8 +67,8 @@ class _DetailsState extends State<Details> {
                         padding: EdgeInsets.symmetric(vertical: 12),
                       ),
                       onPressed: () {
-                        Navigator.pop(context); // Closes dialog
-                        Navigator.pop(context); // Goes back to previous screen
+                        Navigator.pop(context); 
+                        Navigator.pop(context); 
                       },
                       child: Text('Remove', style: TextStyle(color: Colors.white)),
                     ),
@@ -106,7 +105,7 @@ class _DetailsState extends State<Details> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Top Section: Avatar and Info
+            
             Row(
               children: [
                 Container(
@@ -156,7 +155,7 @@ class _DetailsState extends State<Details> {
               ],
             ),
 
-            // Card 1: Personal Information
+            
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0), 
               child: Container(
@@ -207,7 +206,7 @@ class _DetailsState extends State<Details> {
               ),
             ),
 
-            // Card 2: About Me
+            
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0), 
               child: Container(
@@ -233,7 +232,7 @@ class _DetailsState extends State<Details> {
               ),
             ),
             
-            // Card 3: Work Experience with Custom Timelines
+           
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0), 
               child: Container(
@@ -270,7 +269,7 @@ class _DetailsState extends State<Details> {
                       ],
                     ),
 
-                    // Timeline Item 2
+                    
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -292,7 +291,7 @@ class _DetailsState extends State<Details> {
                       ],
                     ),
 
-                    // Timeline Item 3
+                   
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -317,7 +316,7 @@ class _DetailsState extends State<Details> {
               ),
             ),
 
-            // Remove Button Structure
+            
             Padding(
               padding: EdgeInsets.all(16.0),
               child: SizedBox(
