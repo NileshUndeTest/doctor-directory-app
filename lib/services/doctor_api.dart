@@ -39,8 +39,6 @@ class DoctorService {
     }
   }
 
-
-
   // GET DOCTOR BY ID
   Future<DoctorsAll> getDoctorById(String id) async {
     try {
