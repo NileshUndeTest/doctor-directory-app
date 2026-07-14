@@ -26,7 +26,7 @@ class DoctorService {
     ),
   );
 
-  /// GET ALL DOCTORS
+  // GET ALL DOCTORS
   Future<List<DoctorsAll>> getAllDoctors() async {
     try {
       final response = await dio.get("/api/hackathon/doctor");
@@ -39,7 +39,7 @@ class DoctorService {
     }
   }
 
-  /// GET DOCTOR BY ID
+  // GET DOCTOR BY ID
   Future<DoctorsAll> getDoctorById(String id) async {
     try {
       final response = await dio.get("/api/hackathon/doctor/$id");
@@ -50,7 +50,7 @@ class DoctorService {
     }
   }
 
-  /// CREATE DOCTOR
+  //CREATE DOCTOR
   Future<DoctorsAll> createDoctor(DoctorsAll doctor) async {
     try {
       final response = await dio.post(
@@ -64,7 +64,7 @@ class DoctorService {
     }
   }
 
-  /// DELETE DOCTOR
+  //DELETE DOCTOR
   Future<void> deleteDoctor(String id) async {
     try {
       await dio.delete("/api/hackathon/doctor/$id");
