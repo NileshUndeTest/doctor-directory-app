@@ -5,6 +5,6 @@ class ApiService {
 
   static bool _useLocalFallback = false;
 
-  static final List<DoctorModel>
+ // static  List<DoctorModel> = null;
 
 }
