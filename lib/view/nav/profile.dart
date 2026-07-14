@@ -71,7 +71,7 @@ class _ProfileState extends State<Profile> {
                       decoration: BoxDecoration(
                         color: Colors.grey.shade200,
                         // border: Border.all(),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       child: list[index]['icon'],
                     ),
