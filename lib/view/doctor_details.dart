@@ -269,6 +269,7 @@ class _DetailsState extends State<Details> {
                       ],
                     ),
 
+                    
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -290,6 +291,7 @@ class _DetailsState extends State<Details> {
                       ],
                     ),
 
+                   
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
