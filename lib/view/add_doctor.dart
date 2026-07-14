@@ -1,20 +1,6 @@
+import 'package:doctor_directory_app/services/doctor_api.dart';
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: AddDoctor(),
-    );
-  }
-}
+import '../models/DoctorsAll.dart';
 
 class AddDoctor extends StatefulWidget {
   const AddDoctor({super.key});
@@ -237,15 +223,42 @@ class _AddDoctorState extends State<AddDoctor> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 8, 66, 168),
                 ),
-                onPressed: () {
-                  print("Name: ${nameController.text}");
-                  print("Age: ${ageController.text}");
-                  print("Qualification: ${qualificationController.text}");
-                  print("Department: $department");
-                  print("Experience: ${experienceController.text}");
-                  print("Status: $status");
-                  print("About Me:${aboutMeController.text}");
+                onPressed: () async {
+                  try {
+                    final doctor = DoctorsAll(
+                      fullName: nameController.text.trim(),
+                      age: ageController.text.trim(),
+                      qualification: qualificationController.text.trim(),
+                      department: department,
+                      yearsOfExperience: experienceController.text.trim(),
+                      status: status,
+                      about: aboutMeController.text.trim(),
+                      avatar: "",
+                      workExperience: [],
+                    );
+
+                    final createdDoctor = await DoctorService().createDoctor(
+                      doctor,
+                    );
+
+                    print(createdDoctor.toJson());
+
+                    if (!mounted) return;
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Doctor created successfully"),
+                      ),
+                    );
+                  } catch (e) {
+                    if (!mounted) return;
+
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(e.toString())));
+                  }
                 },
+
                 child: const Text(
                   "Create Doctor",
                   style: TextStyle(color: Colors.white, fontSize: 18),
