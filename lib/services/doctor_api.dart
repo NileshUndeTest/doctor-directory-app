@@ -8,7 +8,7 @@ import '../models/DoctorsAll.dart';
 class DoctorService {
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: "YOUR_BASE_URL",
+      baseUrl: "https://6a32c710c6ca2aee4385956d.mockapi.io/",
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
       headers: {
