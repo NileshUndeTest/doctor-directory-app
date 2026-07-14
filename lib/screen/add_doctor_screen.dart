@@ -31,6 +31,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
     'Pediatrics',
     'Dental',
     'General Medicine',
+    'Dermatology',
   ];
 
   final List<String> _statuses = ['Active', 'Offline', 'Busy'];
@@ -58,9 +59,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
   Future<void> _saveDoctor() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isSaving = true;
-    });
+    setState(() => _isSaving = true);
 
     String nameText = _fullNameController.text.trim();
     String initials = 'DR';
@@ -70,9 +69,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
         .split(' ');
     if (parts.isNotEmpty) {
       if (parts.length == 1) {
-        initials = parts[0]
-            .substring(0, parts[0].length >= 2 ? 2 : 1)
-            .toUpperCase();
+        initials =
+            parts[0].substring(0, parts[0].length >= 2 ? 2 : 1).toUpperCase();
       } else {
         initials = '${parts[0][0]}${parts[1][0]}'.toUpperCase();
       }
@@ -89,20 +87,23 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
       yearsOfExperience: '${_yearsOfExpController.text.trim()} Years',
       status: _selectedStatus,
       about: _aboutController.text.trim(),
-      workExperience: 'Specialist in $_selectedDept', // Default start work exp
+      workExperience: 'Specialist in $_selectedDept',
     );
 
     try {
-      await context.read<DoctorProvider>().addDoctor(newDoctor);
+      final success =
+          await context.read<DoctorProvider>().addDoctor(newDoctor);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Doctor profile created successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pop(context, true); // Pop back and reload listing
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Doctor profile created successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context, true); // Signal list to refresh
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -115,19 +116,19 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
       }
     } finally {
       if (mounted) {
-        setState(() {
-          _isSaving = false;
-        });
+        setState(() => _isSaving = false);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    const navyColor = Color(0xFF16213E);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Doctor'),
-        backgroundColor: Color(0xff16213e),
+        backgroundColor: navyColor,
         foregroundColor: Colors.white,
       ),
       body: _isSaving
@@ -139,6 +140,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Full Name
                     _buildLabel('Full Name'),
                     TextFormField(
                       controller: _fullNameController,
@@ -158,6 +160,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                     ),
                     const SizedBox(height: 16),
 
+                    // Age
                     _buildLabel('Age'),
                     TextFormField(
                       controller: _ageController,
@@ -189,7 +192,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                        hintText: 'Enter qualification',
+                        hintText: 'e.g. MBBS, MD (Cardiology)',
                         prefixIcon: Icon(Icons.school_outlined),
                       ),
                       validator: (value) {
@@ -201,6 +204,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                     ),
                     const SizedBox(height: 16),
 
+                    // Department
                     _buildLabel('Department'),
                     DropdownButtonFormField<String>(
                       initialValue: _selectedDept,
@@ -217,18 +221,16 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                       }).toList(),
                       onChanged: (val) {
                         if (val != null) {
-                          setState(() {
-                            _selectedDept = val;
-                          });
+                          setState(() => _selectedDept = val);
                         }
                       },
                     ),
                     const SizedBox(height: 16),
 
+                    // Years of Experience + Status
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Experience
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,11 +242,11 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
+                                        Radius.circular(10)),
                                   ),
                                   hintText: 'Enter years',
-                                  prefixIcon: Icon(Icons.work_history_outlined),
+                                  prefixIcon:
+                                      Icon(Icons.work_history_outlined),
                                 ),
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
@@ -260,7 +262,6 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                           ),
                         ),
                         const SizedBox(width: 16),
-                        // Status
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,8 +272,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
+                                        Radius.circular(10)),
                                   ),
                                 ),
                                 items: _statuses.map((stat) {
@@ -283,9 +283,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                                 }).toList(),
                                 onChanged: (val) {
                                   if (val != null) {
-                                    setState(() {
-                                      _selectedStatus = val;
-                                    });
+                                    setState(() => _selectedStatus = val);
                                   }
                                 },
                               ),
@@ -314,16 +312,17 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                       controller: _aboutController,
                       maxLines: 4,
                       maxLength: 500,
-                      buildCounter:
-                          (
-                            context, {
-                            required currentLength,
-                            required isFocused,
-                            maxLength,
-                          }) => const SizedBox.shrink(),
+                      buildCounter: (
+                        context, {
+                        required currentLength,
+                        required isFocused,
+                        maxLength,
+                      }) =>
+                          const SizedBox.shrink(),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10)),
                         ),
                         hintText: 'Write about the doctor...',
                         alignLabelWithHint: true,
@@ -341,12 +340,9 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          _saveDoctor();
-                        },
-                        //  _saveDoctor,
+                        onPressed: _saveDoctor,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xff16213e),
+                          backgroundColor: navyColor,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -363,6 +359,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
@@ -376,7 +373,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
       child: Text(
         label,
         style: const TextStyle(
-          fontSize: 17,
+          fontSize: 15,
           fontWeight: FontWeight.bold,
           color: Color(0xFF1E293B),
         ),

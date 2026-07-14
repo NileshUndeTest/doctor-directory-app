@@ -1,93 +1,62 @@
-import 'package:doctor_directory_app/screen/doctor_detailPage.dart';
+import 'package:doctor_directory_app/model/WorkExperienceItem.dart';
+import 'package:doctor_directory_app/provider/doctor_provider.dart';
+import 'package:doctor_directory_app/screen/add_doctor_screen.dart';
 import 'package:flutter/material.dart';
-
-class Doctor {
-  final String name;
-  final String qualification;
-  final String specialty;
-  final String status;
-  final int age;
-  final int experienceYears;
-  final String department;
-  final String about;
-  final List<WorkExperience> workHistory;
-
-  const Doctor({
-    required this.name,
-    required this.qualification,
-    required this.specialty,
-    required this.status,
-    required this.age,
-    required this.experienceYears,
-    required this.department,
-    required this.about,
-    required this.workHistory,
-  });
-}
-
-class WorkExperience {
-  final String period;
-  final String title;
-  final String place;
-
-  const WorkExperience({
-    required this.period,
-    required this.title,
-    required this.place,
-  });
-}
+import 'package:provider/provider.dart';
 
 class DoctorDetailsScreen extends StatefulWidget {
-  const DoctorDetailsScreen({super.key});
+  final Doctor doctor;
+
+  const DoctorDetailsScreen({super.key, required this.doctor});
 
   static const Color navy = Color(0xFF16213E);
-
 
   @override
   State<DoctorDetailsScreen> createState() => _DoctorDetailsScreenState();
 }
 
 class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
+  late Doctor _doctor;
+
+  @override
+  void initState() {
+    super.initState();
+    _doctor = widget.doctor;
+  }
+
+  Future<void> _openAddDoctor() async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (_) => const AddDoctorScreen()),
+    );
+    if (result == true && mounted) {
+      // Refresh the doctor list in provider
+      context.read<DoctorProvider>().fetchDoctors();
+    }
+  }
+
+  Future<void> _removeDoctor() async {
+    if (_doctor.id == null) return;
+
+    final provider = context.read<DoctorProvider>();
+    final success = await provider.removeDoctor(_doctor.id!);
+    if (success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${_doctor.fullName} removed successfully')),
+      );
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final doctor = const Doctor(
-      name: 'Dr. Rahul Verma',
-      qualification: 'MBBS, MD (Cardiology)',
-      specialty: 'Cardiology',
-      status: 'Active',
-      age: 45,
-      experienceYears: 15,
-      department: 'Cardiology',
-      about:
-          'Experienced Cardiologist with a demonstrated history of '
-          'working in the healthcare industry. Skilled in Interventional '
-          'Cardiology, Cardiac Diagnostics and Patient Care.',
-      workHistory: [
-        WorkExperience(
-          period: '2024 - Present',
-          title: 'Senior Cardiologist',
-          place: 'Apollo Hospital',
-        ),
-        WorkExperience(
-          period: '2020 - 2024',
-          title: 'Consultant Cardiologist',
-          place: 'Fortis Hospital',
-        ),
-        WorkExperience(
-          period: '2016 - 2020',
-          title: 'Resident Doctor',
-          place: 'City Medical Center',
-        ),
-      ],
-    );
-
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
         backgroundColor: DoctorDetailsScreen.navy,
         elevation: 0,
         centerTitle: true,
-
+        foregroundColor: Colors.white,
         title: const Text(
           'Doctor Details',
           style: TextStyle(
@@ -97,23 +66,34 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _openAddDoctor,
+        backgroundColor: DoctorDetailsScreen.navy,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, color: Colors.white, size: 28),
+      ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
         children: [
-          _ProfileCard(doctor: doctor),
+          _ProfileCard(doctor: _doctor),
           const SizedBox(height: 16),
-          _PersonalInfoCard(doctor: doctor),
+          _PersonalInfoCard(doctor: _doctor),
           const SizedBox(height: 16),
-          _AboutMeCard(about: doctor.about),
+          _AboutMeCard(about: _doctor.about),
           const SizedBox(height: 16),
-          _WorkExperienceCard(history: doctor.workHistory),
+          _WorkExperienceCard(history: _doctor.parsedExperience),
           const SizedBox(height: 24),
-          _RemoveDoctorButton(doctorName: doctor.name),
+          _RemoveDoctorButton(
+            doctorName: _doctor.fullName,
+            onConfirm: _removeDoctor,
+          ),
         ],
       ),
     );
   }
 }
+
+// ─── Shared Card Shell ────────────────────────────────────────────────────────
 
 class _Card extends StatelessWidget {
   final Widget child;
@@ -129,7 +109,7 @@ class _Card extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -140,9 +120,22 @@ class _Card extends StatelessWidget {
   }
 }
 
+// ─── Profile Card ─────────────────────────────────────────────────────────────
+
 class _ProfileCard extends StatelessWidget {
   final Doctor doctor;
   const _ProfileCard({required this.doctor});
+
+  Color _statusColor(String status) {
+    switch (status) {
+      case 'Active':
+        return Colors.green;
+      case 'Busy':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,13 +147,11 @@ class _ProfileCard extends StatelessWidget {
             radius: 30,
             backgroundColor: DoctorDetailsScreen.navy,
             child: Text(
-              doctor.name.trim().isNotEmpty
-                  ? doctor.name.trim().replaceFirst('Dr. ', '')[0]
-                  : '?',
+              doctor.initials,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 26,
+                fontSize: 22,
               ),
             ),
           ),
@@ -170,7 +161,7 @@ class _ProfileCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  doctor.name,
+                  doctor.fullName,
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
@@ -184,7 +175,7 @@ class _ProfileCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  doctor.specialty,
+                  doctor.department,
                   style: const TextStyle(fontSize: 13, color: Colors.black54),
                 ),
                 const SizedBox(height: 10),
@@ -194,7 +185,7 @@ class _ProfileCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.green,
+                    color: _statusColor(doctor.status),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -214,6 +205,8 @@ class _ProfileCard extends StatelessWidget {
     );
   }
 }
+
+// ─── Personal Info Card ───────────────────────────────────────────────────────
 
 class _PersonalInfoCard extends StatelessWidget {
   final Doctor doctor;
@@ -243,7 +236,7 @@ class _PersonalInfoCard extends StatelessWidget {
           _InfoRow(
             icon: Icons.access_time,
             label: 'Experience',
-            value: '${doctor.experienceYears} Years',
+            value: doctor.yearsOfExperience,
           ),
           const SizedBox(height: 12),
           _InfoRow(
@@ -256,6 +249,8 @@ class _PersonalInfoCard extends StatelessWidget {
     );
   }
 }
+
+// ─── Info Row ─────────────────────────────────────────────────────────────────
 
 class _InfoRow extends StatelessWidget {
   final IconData icon;
@@ -293,6 +288,8 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
+// ─── About Me Card ────────────────────────────────────────────────────────────
+
 class _AboutMeCard extends StatelessWidget {
   final String about;
   const _AboutMeCard({required this.about});
@@ -326,8 +323,10 @@ class _AboutMeCard extends StatelessWidget {
   }
 }
 
+// ─── Work Experience Card ─────────────────────────────────────────────────────
+
 class _WorkExperienceCard extends StatelessWidget {
-  final List<WorkExperience> history;
+  final List<WorkExperienceItem> history;
   const _WorkExperienceCard({required this.history});
 
   @override
@@ -345,16 +344,24 @@ class _WorkExperienceCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
-          for (int i = 0; i < history.length; i++)
-            _TimelineTile(entry: history[i], isLast: i == history.length - 1),
+          if (history.isEmpty)
+            const Text(
+              'No work experience listed.',
+              style: TextStyle(color: Colors.black45, fontSize: 13),
+            )
+          else
+            for (int i = 0; i < history.length; i++)
+              _TimelineTile(entry: history[i], isLast: i == history.length - 1),
         ],
       ),
     );
   }
 }
 
+// ─── Timeline Tile ────────────────────────────────────────────────────────────
+
 class _TimelineTile extends StatelessWidget {
-  final WorkExperience entry;
+  final WorkExperienceItem entry;
   final bool isLast;
 
   const _TimelineTile({required this.entry, required this.isLast});
@@ -378,7 +385,8 @@ class _TimelineTile extends StatelessWidget {
               ),
               if (!isLast)
                 Expanded(
-                  child: Container(width: 2, color: const Color(0xFFE0E4EC)),
+                  child:
+                      Container(width: 2, color: const Color(0xFFE0E4EC)),
                 ),
             ],
           ),
@@ -390,7 +398,7 @@ class _TimelineTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    entry.period,
+                    entry.dateRange,
                     style: const TextStyle(
                       fontSize: 12.5,
                       color: Colors.black45,
@@ -407,8 +415,9 @@ class _TimelineTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    entry.place,
-                    style: const TextStyle(fontSize: 13, color: Colors.black54),
+                    entry.subtitle,
+                    style:
+                        const TextStyle(fontSize: 13, color: Colors.black54),
                   ),
                 ],
               ),
@@ -420,9 +429,16 @@ class _TimelineTile extends StatelessWidget {
   }
 }
 
+// ─── Remove Doctor Button ─────────────────────────────────────────────────────
+
 class _RemoveDoctorButton extends StatelessWidget {
   final String doctorName;
-  const _RemoveDoctorButton({required this.doctorName});
+  final Future<void> Function() onConfirm;
+
+  const _RemoveDoctorButton({
+    required this.doctorName,
+    required this.onConfirm,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -430,7 +446,7 @@ class _RemoveDoctorButton extends StatelessWidget {
       width: double.infinity,
       height: 50,
       child: OutlinedButton.icon(
-        onPressed: () => _showRemoveDialog(context, doctorName),
+        onPressed: () => _showRemoveDialog(context),
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: Color(0xFFE64C4C)),
           shape: RoundedRectangleBorder(
@@ -451,7 +467,7 @@ class _RemoveDoctorButton extends StatelessWidget {
     );
   }
 
-  void _showRemoveDialog(BuildContext context, String name) {
+  void _showRemoveDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) {
@@ -480,11 +496,12 @@ class _RemoveDoctorButton extends StatelessWidget {
                 const SizedBox(height: 16),
                 const Text(
                   'Remove Doctor',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                  style:
+                      TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Are you sure you want to remove $name? '
+                  'Are you sure you want to remove $doctorName? '
                   'This action cannot be undone.',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
@@ -500,7 +517,8 @@ class _RemoveDoctorButton extends StatelessWidget {
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(ctx),
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding:
+                              const EdgeInsets.symmetric(vertical: 12),
                           side: const BorderSide(color: Color(0xFFE0E4EC)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -514,24 +532,29 @@ class _RemoveDoctorButton extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(ctx);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('$name removed')),
+                      child: Consumer<DoctorProvider>(
+                        builder: (context, provider, _) {
+                          return ElevatedButton(
+                            onPressed: provider.isLoading
+                                ? null
+                                : () async {
+                                    Navigator.pop(ctx);
+                                    await onConfirm();
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12),
+                              backgroundColor: const Color(0xFFE64C4C),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              'Remove',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          backgroundColor: const Color(0xFFE64C4C),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'Remove',
-                          style: TextStyle(color: Colors.white),
-                        ),
                       ),
                     ),
                   ],
