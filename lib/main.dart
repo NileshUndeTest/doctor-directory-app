@@ -1,3 +1,4 @@
+import 'package:doctor_directory_app/screen/add_doctor_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Doctor Directory App',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const MyHomePage(title: 'Doctor Directory App'),
+      home: const AddDoctorScreen(),
     );
   }
 }
