@@ -36,26 +36,32 @@ class _DetailsState extends State<Details> {
                   color: Color.fromARGB(255, 6, 46, 208),
                 ),
               ),
-              Column(
-                children: [
-                  Text(
-                    'Doctor Name',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  Text(
-                    'MBBS, MD',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Text(
-                    'Specialization',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      'Doctor Name',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    Text(
+                      'MBBS, MD',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      'Specialization',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
           Container(
-            margin: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            margin: const EdgeInsets.all(0),
             child: Text(
               'Personal Information',
               style: TextStyle(fontSize: 16),
