@@ -1,5 +1,7 @@
 import 'package:doctor_directory_app/model/WorkExperienceItem.dart';
+import 'package:doctor_directory_app/provider/doctor_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddDoctorScreen extends StatefulWidget {
   const AddDoctorScreen({super.key});
@@ -91,7 +93,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
     );
 
     try {
-      // await context.read<DoctorProvider>().addDoctor(newDoctor);
+      await context.read<DoctorProvider>().addDoctor(newDoctor);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -339,7 +341,9 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _saveDoctor();
+                        },
                         //  _saveDoctor,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xff16213e),

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:doctor_directory_app/screen/add_doctor_screen.dart';
 import 'package:flutter/material.dart';
 
 class Doctor {
@@ -7,11 +8,7 @@ class Doctor {
   final String specialty;
   final String status; // 'Active', 'Offline', 'Busy'
 
-  Doctor({
-    required this.name,
-    required this.specialty,
-    required this.status,
-  });
+  Doctor({required this.name, required this.specialty, required this.status});
 }
 
 class DoctorCategory {
@@ -26,7 +23,6 @@ class DoctorCategory {
   });
 }
 
-
 class DoctorsScreen extends StatefulWidget {
   const DoctorsScreen({super.key});
 
@@ -37,7 +33,13 @@ class DoctorsScreen extends StatefulWidget {
 class _DoctorsScreenState extends State<DoctorsScreen> {
   int _selectedCategoryIndex = 0;
 
-  final List<String> categories = ['All', 'Cardiology', 'Neurology', 'Orthopedics', 'Pediatrics'];
+  final List<String> categories = [
+    'All',
+    'Cardiology',
+    'Neurology',
+    'Orthopedics',
+    'Pediatrics',
+  ];
 
   // Mock Data mimicking the image
   final List<DoctorCategory> doctorCategories = [
@@ -45,24 +47,48 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       name: 'Cardiology',
       icon: Icons.favorite,
       doctors: [
-        Doctor(name: 'Dr. Rahul Verma', specialty: 'MBBS, MD (Cardiology)', status: 'Active'),
-        Doctor(name: 'Dr. Anjali Mehta', specialty: 'MBBS, DM (Cardiology)', status: 'Active'),
+        Doctor(
+          name: 'Dr. Rahul Verma',
+          specialty: 'MBBS, MD (Cardiology)',
+          status: 'Active',
+        ),
+        Doctor(
+          name: 'Dr. Anjali Mehta',
+          specialty: 'MBBS, DM (Cardiology)',
+          status: 'Active',
+        ),
       ],
     ),
     DoctorCategory(
       name: 'Neurology',
       icon: Icons.psychology,
       doctors: [
-        Doctor(name: 'Dr. Sanjay Kumar', specialty: 'MBBS, DM (Neurology)', status: 'Offline'),
-        Doctor(name: 'Dr. Priya Sharma', specialty: 'MBBS, DNB (Neurology)', status: 'Busy'),
+        Doctor(
+          name: 'Dr. Sanjay Kumar',
+          specialty: 'MBBS, DM (Neurology)',
+          status: 'Offline',
+        ),
+        Doctor(
+          name: 'Dr. Priya Sharma',
+          specialty: 'MBBS, DNB (Neurology)',
+          status: 'Busy',
+        ),
       ],
     ),
     DoctorCategory(
       name: 'Orthopedics',
       icon: Icons.dangerous_outlined,
       doctors: [
-        Doctor(name: 'Dr. Vikram Singh', specialty: 'MBBS, MS (Orthopedics)', status: 'Active'),
-        Doctor(name: 'Dr. Neha Kapoor', specialty: 'MBBS, MS (Orthopedics)', status: 'Busy'),
+        Doctor(
+          name: 'Dr. Vikram Singh',
+          specialty: 'MBBS, MS (Orthopedics)',
+          status: 'Active',
+        ),
+        Doctor(
+          name: 'Dr. Neha Kapoor',
+          specialty: 'MBBS, MS (Orthopedics)',
+          status: 'Busy',
+        ),
       ],
     ),
   ];
@@ -75,13 +101,16 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       appBar: AppBar(
         backgroundColor: primaryBlue,
         elevation: 0,
-        
+
         title: const Text(
           'Doctors',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
         ),
         centerTitle: true,
-         
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -114,7 +143,6 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
               ),
             ),
 
-            
             SizedBox(
               height: 40,
               child: ListView.builder(
@@ -137,14 +165,18 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                         categories[index],
                         style: TextStyle(
                           color: isSelected ? Colors.white : Colors.black87,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
                       selected: isSelected,
                       selectedColor: primaryBlue,
                       backgroundColor: Colors.white,
                       side: BorderSide(
-                        color: isSelected ? Colors.transparent : Colors.grey.shade200,
+                        color: isSelected
+                            ? Colors.transparent
+                            : Colors.grey.shade200,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -161,7 +193,6 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             ),
             const SizedBox(height: 16),
 
-           
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -169,7 +200,10 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
               itemBuilder: (context, catIndex) {
                 final category = doctorCategories[catIndex];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -187,11 +221,14 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                             ),
                           ),
                           const Spacer(),
-                          const Icon(Icons.keyboard_arrow_down, color: primaryBlue),
+                          const Icon(
+                            Icons.keyboard_arrow_down,
+                            color: primaryBlue,
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8),
- 
+
                       Column(
                         children: category.doctors.map((doctor) {
                           return Container(
@@ -202,12 +239,15 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                               border: Border.all(color: Colors.grey.shade100),
                             ),
                             child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               leading: CircleAvatar(
                                 radius: 24,
                                 backgroundColor: primaryBlue,
                                 child: Text(
-                                  doctor.name.split(' ')[1][0], 
+                                  doctor.name.split(' ')[1][0],
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -225,32 +265,43 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                               ),
                               subtitle: Text(
                                 doctor.specialty,
-                                style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 13,
+                                ),
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   _buildStatusBadge(doctor.status),
                                   const SizedBox(width: 8),
-                                  Icon(Icons.chevron_right, color: Colors.grey.shade400),
+                                  Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.grey.shade400,
+                                  ),
                                 ],
                               ),
                             ),
                           );
                         }).toList(),
-                      )
+                      ),
                     ],
                   ),
                 );
               },
             ),
-            const SizedBox(height: 80), 
+            const SizedBox(height: 80),
           ],
         ),
       ),
-      
+
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddDoctorScreen()),
+          );
+        },
         backgroundColor: primaryBlue,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white, size: 30),

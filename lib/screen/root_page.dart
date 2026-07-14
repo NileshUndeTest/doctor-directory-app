@@ -1,3 +1,4 @@
+import 'package:doctor_directory_app/screen/doctors_listPage.dart';
 import 'package:doctor_directory_app/screen/profile_page.dart';
 import 'package:flutter/material.dart';
 
@@ -13,18 +14,12 @@ class MainNavigationView extends StatefulWidget {
 class _MainNavigationViewState extends State<MainNavigationView> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomePage(),
-    const ProfilePage (),
-  ];
+  final List<Widget> _pages = [const DoctorsScreen(), const ProfilePage()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
