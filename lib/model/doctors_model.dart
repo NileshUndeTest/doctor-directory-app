@@ -8,7 +8,7 @@ class DoctorsModel {
   final String yearsOfExperience;
   final String status;
   final String about;
-  final String workExperience;
+  final dynamic workExperience;
 
 
   DoctorsModel({
@@ -23,4 +23,18 @@ class DoctorsModel {
     required this.about,
     required this.workExperience
   });
+}
 
+class WorkExperienceItem{
+ final String dateRange;
+ final String hospitalName;
+ final String role;
+
+
+ WorkExperienceItem({
+   required this.dateRange,
+   required this.hospitalName,
+   required this.role,
+});
+
+}
