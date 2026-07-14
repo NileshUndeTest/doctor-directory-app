@@ -278,6 +278,7 @@ class _DetailsState extends State<Details> {
                             CircleAvatar(radius: 6, backgroundColor: Color.fromARGB(255, 6, 46, 208)),
                             Container(width: 2, height: 50, color: Colors.grey.shade300),
                           ],
+                          
                         ),
                         SizedBox(width: 12),
                         Column(
