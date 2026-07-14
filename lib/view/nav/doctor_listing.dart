@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:doctor_directory_app/models/DoctorsAll.dart';
 import 'package:doctor_directory_app/services/doctor_api.dart';
+import 'package:doctor_directory_app/view/add_doctor.dart';
 import 'package:doctor_directory_app/view/doctor_details.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +50,10 @@ class _DoctorListingState extends State<DoctorListing> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           try {
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => AddDe,));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddDoctor()),
+            );
           } catch (e) {
             log('error at home nav:$e');
           }
@@ -118,7 +122,9 @@ class _DoctorListingState extends State<DoctorListing> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Details(),
+                                builder: (context) => Details(
+                                  doctorId: doctorsall[index].id.toString(),
+                                ),
                               ),
                             );
                           },
@@ -131,7 +137,26 @@ class _DoctorListingState extends State<DoctorListing> {
                           subtitle: Text(
                             '${doctorsall[index].qualification}, (${doctorsall[index].department})',
                           ),
-                          trailing: Row(mainAxisSize: MainAxisSize.min),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Text(
+                                  doctorsall[index].status.toString(),
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Icon(Icons.keyboard_arrow_right),
+                            ],
+                          ),
                         );
                         // return ExpansionTile(
                         //   leading: const Icon(Icons.monitor_heart),
