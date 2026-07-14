@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   logger: ^2.7.0
   dio: ^5.10.0
+  pretty_dio_logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:
