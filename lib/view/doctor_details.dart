@@ -81,7 +81,7 @@ class _DetailsState extends State<Details> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         );
@@ -127,7 +127,7 @@ Future<void> _deleteDoctor() async {
           IconButton(
             icon:  Icon(Icons.more_vert, color: Colors.white),
             onPressed: () {},
-          )
+          ),
         ],
       ),
       body: FutureBuilder<DoctorsAll>(
